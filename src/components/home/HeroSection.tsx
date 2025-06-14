@@ -1,6 +1,7 @@
 // src/components/home/HeroSection.tsx
 import React from "react";
 import Link from "next/link"; // Import Link dari next/link
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
@@ -23,10 +24,12 @@ export default function HeroSection() {
       </div>
       <div className="md:w-1/2 flex justify-center md:justify-end mt-8 md:mt-0">
         <div className="relative w-full max-w-lg aspect-video bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          <img
+          <Image
             src="/placeholder-video.png"
             alt="Video Placeholder"
             className="w-full h-full object-cover"
+            width={640}
+            height={360}
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
             <span className="text-xl">Tonton di YouTube</span>

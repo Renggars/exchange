@@ -10,7 +10,7 @@ export default function AccountSettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isGoogleLogin, setIsGoogleLogin] = useState(true); // Dummy state: true jika login via Google
+  const [isGoogleLogin] = useState(true); // Dummy state: true jika login via Google
 
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault();

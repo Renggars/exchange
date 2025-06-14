@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper"; // Import wrapper
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -99,7 +100,7 @@ export default function LoginPage() {
               type="button"
               className="w-full flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-md transition-colors border border-gray-600"
             >
-              <img
+              <Image
                 src="/google-icon.svg"
                 alt="Google"
                 className="w-5 h-5 mr-2"

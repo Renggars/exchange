@@ -5,13 +5,33 @@ import React, { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
+// Definisikan interface untuk struktur data transaksi
+// Anda bisa menyesuaikan properti ini sesuai dengan data transaksi riil Anda
+interface Transaction {
+  date: string;
+  type: "Beli" | "Jual" | "Deposit" | "Penarikan"; // Lebih spesifik dari string biasa
+  price: string; // Atau number jika Anda akan melakukan perhitungan
+  amount: string; // Atau number jika Anda akan melakukan perhitungan
+}
+
 export default function TransactionsPage() {
-  const [activeFilter, setActiveFilter] = useState("Semua"); // State untuk filter transaksi
+  const [activeFilter, setActiveFilter] = useState<
+    "Semua" | Transaction["type"]
+  >("Semua"); // State untuk filter transaksi
+
   // Pilihan filter yang tersedia
-  const filters = ["Semua", "Beli", "Jual", "Deposit", "Penarikan"]; // "Semua" untuk menampung semua jenis,
+  // Ubah tipe filters agar secara eksplisit menerima 'Semua' DAN tipe transaksi.
+  const filters: ("Semua" | Transaction["type"])[] = [
+    "Semua",
+    "Beli",
+    "Jual",
+    "Deposit",
+    "Penarikan",
+  ];
 
   // Data transaksi dummy (kosong untuk saat ini, sesuai screenshot)
-  const transactions: any[] = []; // Array kosong untuk meniru "Tidak Ada Data"
+  // Ganti `any[]` dengan `Transaction[]` untuk type safety
+  const transactions: Transaction[] = []; // Array kosong untuk meniru "Tidak Ada Data"
 
   return (
     <main className="min-h-screen bg-gray-900 text-white flex flex-col">
@@ -36,8 +56,7 @@ export default function TransactionsPage() {
                   }
                 `}
               >
-                {filter === "Semua" ? "Semua" : filter}{" "}
-                {/* Tampilkan 'Semua' jika filter adalah 'Semua' */}
+                {filter}
               </button>
             ))}
           </div>

@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useRouter } from "next/navigation"; // Import useRouter
+import Image from "next/image";
 
 export default function MarketPage() {
   const [activeTab, setActiveTab] = useState("Trending");
@@ -369,10 +370,12 @@ export default function MarketPage() {
                       {index + 1}
                     </span>
                     {coin.icon && (
-                      <img
+                      <Image
                         src={coin.icon}
                         alt={coin.name}
-                        className="w-6 h-6 mr-2"
+                        width={24} // <-- Tambahkan width
+                        height={24} // <-- Tambahkan height
+                        className="w-6 h-6 mr-2" // className tetap untuk styling Tailwind CSS
                       />
                     )}
                     <span className="font-medium text-white">{coin.name}</span>
@@ -547,10 +550,12 @@ export default function MarketPage() {
                       {startIndex + index + 1}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white flex items-center">
-                      <img
+                      <Image
                         src={crypto.icon}
                         alt={crypto.name}
-                        className="w-5 h-5 mr-2"
+                        width={20} // <-- Tambahkan width (sesuai w-5)
+                        height={20} // <-- Tambahkan height (sesuai h-5)
+                        className="w-5 h-5 mr-2" // className tetap untuk styling Tailwind CSS
                       />{" "}
                       {crypto.name}
                     </td>

@@ -1,7 +1,7 @@
 // src/components/ui/HelpModal.tsx
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface HelpModalProps {
   isOpen: boolean;

@@ -4,7 +4,6 @@
 import React, { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Link from "next/link";
 
 export default function TutorialPage() {
   const [activeSection, setActiveSection] = useState("memulai");

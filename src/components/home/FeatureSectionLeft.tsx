@@ -1,3 +1,5 @@
+// src/components/home/FeatureSectionLeft.tsx
+import Image from "next/image";
 import React from "react";
 
 interface FeatureSectionLeftProps {
@@ -20,11 +22,13 @@ export default function FeatureSectionLeft({
   return (
     <section className="container mx-auto py-16 px-6 md:flex items-center justify-between gap-8">
       <div className="md:w-1/2 flex justify-center md:justify-start">
+        {/* Tambahkan `relative` pada parent div agar `fill` bekerja */}
         <div className="relative w-full max-w-lg aspect-video bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          <img
+          <Image
             src={imageSrc}
             alt={imageAlt}
-            className="w-full h-full object-cover"
+            fill // <-- Tambahkan properti fill di sini
+            style={{ objectFit: "cover" }} // <-- Tambahkan style objectFit di sini
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
             <span className="text-xl">{imageOverlayText}</span>

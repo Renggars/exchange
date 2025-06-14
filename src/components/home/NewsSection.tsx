@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface NewsArticle {
@@ -44,10 +45,11 @@ export default function NewsSection() {
             key={article.id}
             className="bg-gray-800 rounded-lg shadow-lg overflow-hidden"
           >
-            <img
+            <Image
               src={article.imageSrc}
               alt={article.title}
-              className="w-full h-48 object-cover"
+              width={500}
+              height={500}
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-white mb-2">

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 export default function CryptoTableSection() {
@@ -51,10 +52,12 @@ export default function CryptoTableSection() {
           <tbody className="divide-y divide-gray-700">
             <tr>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white flex items-center">
-                <img
+                <Image
                   src="/bitcoin-icon.png"
                   alt="BTC"
                   className="w-5 h-5 mr-2"
+                  width={25}
+                  height={25}
                 />{" "}
                 Bitcoin
               </td>
@@ -76,7 +79,13 @@ export default function CryptoTableSection() {
             </tr>
             <tr>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white flex items-center">
-                <img src="/bnb-icon.png" alt="BNB" className="w-5 h-5 mr-2" />{" "}
+                <Image
+                  src="/bnb-icon.png"
+                  alt="BNB"
+                  className="w-5 h-5 mr-2"
+                  width={25} // Sudah ada
+                  height={25} // Sudah ada
+                />{" "}
                 BNB
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
@@ -97,10 +106,12 @@ export default function CryptoTableSection() {
             </tr>
             <tr>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white flex items-center">
-                <img
+                <Image
                   src="/ethereum-icon.png"
                   alt="ETH"
                   className="w-5 h-5 mr-2"
+                  width={25} // Sudah ada
+                  height={25} // Sudah ada
                 />{" "}
                 Ethereum
               </td>

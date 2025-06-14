@@ -1,25 +1,24 @@
 // src/components/layout/Header.tsx
-"use client"; // Penting untuk interaktivitas klien seperti useState, onClick, dll.
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Untuk navigasi programatis
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import HelpModal from "../modal/HelpModal";
 
 export default function Header() {
-  // Ganti ini dengan state login actual Anda (misalnya dari konteks autentikasi atau Redux)
-  // Untuk demo ini, kita asumsikan pengguna selalu login.
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const profileMenuRef = useRef<HTMLDivElement>(null); // Ref untuk mendeteksi klik di luar menu
-  const router = useRouter(); // Inisialisasi useRouter
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false); // State for the HelpModal
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
-  // Dummy user data - ganti dengan data user actual dari konteks/API Anda
   const user = {
-    initial: "K", // Inisial nama pengguna
-    balance: "Rp.0", // Saldo pengguna
+    initial: "K",
+    balance: "Rp.0",
   };
 
-  // Efek untuk menutup menu jika di-klik di luar
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -29,20 +28,25 @@ export default function Header() {
         setIsProfileMenuOpen(false);
       }
     }
-    // Tambahkan event listener saat komponen mount
     document.addEventListener("mousedown", handleClickOutside);
-    // Hapus event listener saat komponen unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []); // [] berarti efek ini hanya berjalan sekali saat mount
+  }, []);
 
   const handleLogout = () => {
-    // Implementasi logout sebenarnya di sini (misalnya, hapus token, panggil API logout)
     console.log("Melakukan logout...");
-    setIsLoggedIn(false); // Untuk demo: ubah state isLoggedIn menjadi false
-    setIsProfileMenuOpen(false); // Tutup menu setelah logout
-    router.push("/auth/login"); // Arahkan ke halaman login setelah logout
+    setIsLoggedIn(false);
+    setIsProfileMenuOpen(false);
+    router.push("/auth/login");
+  };
+
+  const handleOpenHelpModal = () => {
+    setIsHelpModalOpen(true);
+  };
+
+  const handleCloseHelpModal = () => {
+    setIsHelpModalOpen(false);
   };
 
   return (
@@ -54,11 +58,11 @@ export default function Header() {
             href="/"
             className="flex items-center text-white text-2xl font-bold"
           >
-            {/* Pastikan Anda memiliki logo ini di folder public */}
-            <img
+            <Image
               src="/kriptolab-logo.png"
               alt="KriptoLab Logo"
-              className="h-8 w-auto mr-2"
+              width={32}
+              height={32}
             />
             KriptoLab
           </Link>
@@ -75,12 +79,13 @@ export default function Header() {
             >
               Tutorial
             </Link>
-            <Link
-              href="/bantuan"
-              className="text-gray-300 hover:text-white transition-colors text-lg"
+            {/* Changed Link to a button/div to open the modal */}
+            <button
+              onClick={handleOpenHelpModal}
+              className="text-gray-300 hover:text-white transition-colors text-lg bg-transparent border-none cursor-pointer p-0" // Add styles to make it look like a link
             >
               Bantuan
-            </Link>
+            </button>
           </nav>
         </div>
 
@@ -114,8 +119,12 @@ export default function Header() {
             <>
               {/* Bahasa (ID) */}
               <div className="flex items-center space-x-1 text-gray-300">
-                {/* Pastikan Anda memiliki gambar bendera ini di folder public */}
-                <img src="/id-flag.png" alt="ID Flag" className="h-4 w-auto" />
+                <Image
+                  src="/id-flag.png"
+                  alt="ID Flag"
+                  width={16}
+                  height={16}
+                />
                 <span>ID</span>
               </div>
               {/* Saldo */}
@@ -293,6 +302,9 @@ export default function Header() {
           )}
         </div>
       </div>
+
+      {/* Render the HelpModal */}
+      <HelpModal isOpen={isHelpModalOpen} onClose={handleCloseHelpModal} />
     </header>
   );
 }
