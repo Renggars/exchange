@@ -1,4 +1,5 @@
 // src/components/layout/Footer.tsx
+import Image from "next/image";
 import React from "react";
 
 export default function Footer() {
@@ -7,10 +8,12 @@ export default function Footer() {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         {/* Kolom Logo/Copyright */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4">
-          <img
+          <Image
             src="/github-icon.svg"
             alt="Github Icon"
-            className="w-8 h-8 text-white"
+            className="text-white"
+            width={32}
+            height={32}
           />
           <p className="text-gray-400">
             &copy; {new Date().getFullYear()} Simulacoin.

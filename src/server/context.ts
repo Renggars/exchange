@@ -3,16 +3,30 @@ import { prisma } from "../lib/prisma";
 import { verify } from "jsonwebtoken";
 import { JWT_PAYLOAD_SCHEMA, AuthTokenPayload } from "./auth.utils";
 
+// Definisikan tipe DbUser dari hasil seleksi Prisma Anda
+// Pastikan ini mencakup semua field yang Anda akses di router user.ts
+export type DbUser = {
+  // <--- PASTIKAN ADA 'export'
+  id: string;
+  email: string;
+  username: string;
+  role: "USER" | "ADMIN"; // Atau tipe enum yang sesuai
+  phone: string | null; // Sesuaikan dengan schema Prisma Anda
+  address: string | null; // Sesuaikan dengan schema Prisma Anda
+  createdAt: Date; // Sesuaikan dengan schema Prisma Anda
+  // Tambahkan properti lain yang mungkin Anda select dari prisma.user
+};
+
 interface CreateContextOptions {
-  req: Request; // <--- Ubah tipe di sini dari NextRequest menjadi Request
+  req: Request;
 }
 
 export const createContext = async (opts: CreateContextOptions) => {
   let user: AuthTokenPayload | null = null;
-  let dbUser: unknown = null;
+  let dbUser: DbUser | null = null;
 
   try {
-    const authHeader = opts.req.headers.get("Authorization"); // Ini tetap sama
+    const authHeader = opts.req.headers.get("Authorization");
     const token = authHeader?.split("Bearer ")[1];
 
     if (token && process.env.JWT_SECRET) {
@@ -22,7 +36,7 @@ export const createContext = async (opts: CreateContextOptions) => {
       if (parsedPayload.success) {
         user = parsedPayload.data;
 
-        dbUser = await prisma.user.findUnique({
+        const fetchedUser = await prisma.user.findUnique({
           where: { id: user.userId },
           select: {
             id: true,
@@ -35,8 +49,11 @@ export const createContext = async (opts: CreateContextOptions) => {
           },
         });
 
-        if (!dbUser) {
+        if (fetchedUser) {
+          dbUser = fetchedUser as DbUser; // <--- Penting: Lakukan casting di sini juga
+        } else {
           user = null;
+          dbUser = null;
         }
       } else {
         console.warn("Invalid JWT payload:", parsedPayload.error.flatten());
@@ -48,6 +65,7 @@ export const createContext = async (opts: CreateContextOptions) => {
       (err as Error).message
     );
     user = null;
+    dbUser = null;
   }
 
   return {

@@ -3,17 +3,16 @@
 import { z } from "zod";
 import {
   router,
-  publicProcedure,
+  // publicProcedure,
   protectedProcedure,
   adminProcedure,
-} from "../trpc"; // Impor protectedProcedure dan adminProcedure
+} from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { hash } from "bcrypt-ts";
+// import { Prisma } from "@prisma/client"; // Import Prisma dari @prisma/client
 
 export const userRouter = router({
-  // addUser diubah namanya menjadi createUser, karena ini untuk admin
-  // Jika ini untuk registrasi, lebih baik ditangani oleh auth.ts
-  createUser: adminProcedure // Hanya admin yang bisa menambahkan user lain
+  createUser: adminProcedure
     .input(
       z.object({
         email: z.string().email(),
@@ -25,7 +24,7 @@ export const userRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { prisma } = ctx; // Dapatkan prisma dari ctx
+      const { prisma } = ctx;
 
       const {
         email,
@@ -67,61 +66,61 @@ export const userRouter = router({
       };
     }),
 
-  // getUsers: Tetap publik atau protected sesuai kebutuhan. Contoh ini tetap publik.
-  getUsers: publicProcedure
-    .input(
-      z.object({
-        search: z.string().optional(),
-        page: z.number().default(1),
-        totalItems: z.number().default(10),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const { prisma } = ctx; // Dapatkan prisma dari ctx
+  // getUsers: publicProcedure
+  //   .input(
+  //     z.object({
+  //       search: z.string().optional(),
+  //       page: z.number().default(1),
+  //       totalItems: z.number().default(10),
+  //     })
+  //   )
+  //   .query(async ({ input, ctx }) => {
+  //     const { prisma } = ctx;
 
-      const { search = "", page, totalItems } = input;
-      const trimmedSearch = search.trim();
+  //     const { search = "", page, totalItems } = input;
+  //     const trimmedSearch = search.trim();
 
-      let where: any = {};
+  //     // Perbaiki di sini: Beri tipe spesifik untuk 'where'
+  //     // Menggunakan Prisma.UserWhereInput adalah cara yang aman
+  //     let where: Prisma.UserWhereInput = {};
 
-      if (trimmedSearch !== "") {
-        where = {
-          OR: [
-            { username: { contains: trimmedSearch, mode: "insensitive" } },
-            { email: { contains: trimmedSearch, mode: "insensitive" } },
-          ],
-        };
-      }
+  //     if (trimmedSearch !== "") {
+  //       where = {
+  //         OR: [
+  //           { username: { contains: trimmedSearch, mode: "insensitive" } },
+  //           { email: { contains: trimmedSearch, mode: "insensitive" } },
+  //         ],
+  //       };
+  //     }
 
-      const items = await prisma.user.findMany({
-        where,
-        skip: (page - 1) * totalItems,
-        take: totalItems,
-        select: {
-          id: true,
-          email: true,
-          role: true,
-          username: true,
-          createdAt: true,
-        },
-      });
+  //     const items = await prisma.user.findMany({
+  //       where,
+  //       skip: (page - 1) * totalItems,
+  //       take: totalItems,
+  //       select: {
+  //         id: true,
+  //         email: true,
+  //         role: true,
+  //         username: true,
+  //         createdAt: true,
+  //       },
+  //     });
 
-      const totalCount = await prisma.user.count({
-        where,
-      });
+  //     const totalCount = await prisma.user.count({
+  //       where,
+  //     });
 
-      return {
-        items,
-        totalItems: totalCount,
-        totalPages: Math.ceil(totalCount / totalItems),
-      };
-    }),
+  //     return {
+  //       items,
+  //       totalItems: totalCount,
+  //       totalPages: Math.ceil(totalCount / totalItems),
+  //     };
+  //   }),
 
-  // Mendapatkan profil user yang sedang login
   getLoggedInUserProfile: protectedProcedure.query(async ({ ctx }) => {
-    const { dbUser } = ctx; // Dapatkan dbUser dari ctx (ini sudah non-null karena protectedProcedure)
+    // Dengan perubahan di trpc.ts, ctx.dbUser di sini sudah dijamin bertipe DbUser (non-null)
+    const { dbUser } = ctx;
 
-    // dbUser sudah dijamin ada dan diambil dari database oleh context
     return {
       id: dbUser.id,
       email: dbUser.email,
@@ -133,8 +132,7 @@ export const userRouter = router({
     };
   }),
 
-  // Memperbarui profil user yang sedang login
-  updateMyProfile: protectedProcedure // User mengupdate profilnya sendiri
+  updateMyProfile: protectedProcedure
     .input(
       z.object({
         username: z.string().optional(),
@@ -143,10 +141,10 @@ export const userRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { prisma, dbUser } = ctx; // Dapatkan prisma dan dbUser dari ctx
+      const { prisma, dbUser } = ctx; // dbUser di sini juga dijamin bertipe DbUser
 
       const updatedUser = await prisma.user.update({
-        where: { id: dbUser.id }, // Update user yang sedang login
+        where: { id: dbUser.id },
         data: {
           username: input.username,
           phone: input.phone,
@@ -163,11 +161,10 @@ export const userRouter = router({
       };
     }),
 
-  // Hanya admin yang bisa memperbarui user lain
-  updateUserByAdmin: adminProcedure // Hanya admin yang bisa memanggil ini
+  updateUserByAdmin: adminProcedure
     .input(
       z.object({
-        id: z.string(), // ID user yang akan diupdate
+        id: z.string(),
         email: z.string().email().optional(),
         username: z.string().optional(),
         role: z.enum(["USER", "ADMIN"]).optional(),
@@ -176,7 +173,7 @@ export const userRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { prisma } = ctx; // Dapatkan prisma dari ctx
+      const { prisma } = ctx;
 
       const { id, email, username, role, phone, address } = input;
 
@@ -200,15 +197,14 @@ export const userRouter = router({
       };
     }),
 
-  // Hanya admin yang bisa menghapus user
-  deleteUser: adminProcedure // Hanya admin yang bisa memanggil ini
+  deleteUser: adminProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { prisma } = ctx; // Dapatkan prisma dari ctx
+      const { prisma } = ctx;
 
       const { id } = input;
 
