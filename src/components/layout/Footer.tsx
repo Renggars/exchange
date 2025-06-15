@@ -9,14 +9,14 @@ export default function Footer() {
         {/* Kolom Logo/Copyright */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4">
           <Image
-            src="/github-icon.svg"
+            src="/github.png"
             alt="Github Icon"
             className="text-white"
-            width={32}
-            height={32}
+            width={50}
+            height={50}
           />
           <p className="text-gray-400">
-            &copy; {new Date().getFullYear()} Simulacoin.
+            &copy; {new Date().getFullYear()} CRYPTEX.
           </p>
           <p className="text-gray-400">All rights reserved.</p>
         </div>

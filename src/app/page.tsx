@@ -42,7 +42,7 @@ export default function HomePage() {
             title="Pantau Pasar Kripto Secara Real-Time"
             description="Jelajahi berbagai pasangan aset kripto dengan data harga langsung, volume, dan tren. Dilengkapi chart interaktif untuk membantu Anda menganalisis pasar dengan mudah."
             buttonText="Lihat Pasar"
-            imageSrc="/realtime-market-placeholder.png"
+            imageSrc="/logo.png"
             imageAlt="Real-Time Market"
             imageOverlayText="Preview Pasar"
           />
@@ -52,7 +52,7 @@ export default function HomePage() {
             title="Belajar Trading Tanpa Risiko"
             description="Praktikkan pembelian dan penjualan aset kripto tanpa risiko. Fitur ini membantu Anda memahami mekanisme trading sambil belajar membuat keputusan investasi."
             buttonText="Mulai Trading"
-            imageSrc="/risk-free-trading-placeholder.png"
+            imageSrc="/logo.png"
             imageAlt="Risk-Free Trading"
             imageOverlayText="Simulasi Trading"
           />
@@ -62,7 +62,7 @@ export default function HomePage() {
             title="Pantau Riwayat Transaksi Anda"
             description="Simpan catatan lengkap dari semua aktivitas trading Anda. Lihat riwayat transaksi, analisis perdagangan sebelumnya, dan buat keputusan yang lebih baik untuk investasi di masa depan."
             buttonText="Lihat Riwayat"
-            imageSrc="/transaction-history-placeholder.png"
+            imageSrc="/logo.png"
             imageAlt="Transaction History"
             imageOverlayText="Lihat Riwayat"
           />
@@ -72,7 +72,7 @@ export default function HomePage() {
             title="Lihat dan Pantau Portofolio Anda"
             description="Pelajari cara membaca portofolio dengan grafik dan data aset yang lengkap. Simulasi ini dirancang untuk membantu Anda memahami hasil keputusan trading Anda."
             buttonText="Lihat Portofolio"
-            imageSrc="/portfolio-placeholder.png"
+            imageSrc="/logo.png"
             imageAlt="Portfolio"
             imageOverlayText="Pantau Portofolio"
           />

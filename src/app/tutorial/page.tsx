@@ -48,10 +48,10 @@ export default function TutorialPage() {
         {/* Konten Utama Tutorial */}
         <article className="md:w-3/4 bg-gray-800 rounded-lg shadow-lg p-8 prose prose-invert max-w-none">
           <h1 className="text-4xl font-bold text-white mb-6">
-            Selamat Datang di KriptoLab!
+            Selamat Datang di CRYPTEX!
           </h1>
           <p className="text-gray-300 mb-6">
-            KriptoLab adalah platform simulasi perdagangan cryptocurrency yang
+            CRYPTEX adalah platform simulasi perdagangan cryptocurrency yang
             dirancang hanya untuk tujuan edukasi. Data yang ditampilkan berasal
             dari API Indodex dan dimaksudkan untuk latihan dalam lingkungan
             tanpa risiko. Platform ini tidak memberikan saran keuangan atau
@@ -81,12 +81,12 @@ export default function TutorialPage() {
               Membuat Akun Anda
             </h2>
             <p className="text-gray-300 mb-4">
-              Mulai perjalanan KriptoLab Anda dengan membuat akun gratis untuk
+              Mulai perjalanan CRYPTEX Anda dengan membuat akun gratis untuk
               menyimpan progres dan mulai trading.
             </p>
             <ol className="list-decimal list-inside text-gray-300 mb-4 space-y-2">
               <li>
-                Kunjungi situs web KriptoLab dan temukan tombol{" "}
+                Kunjungi situs web CRYPTEX dan temukan tombol{" "}
                 <span className="font-semibold text-purple-400">Daftar</span> di
                 pojok kanan atas.
               </li>
@@ -129,7 +129,7 @@ export default function TutorialPage() {
               Masuk ke Akun Anda
             </h2>
             <p className="text-gray-300 mb-4">
-              Akses akun KriptoLab Anda dan mulai simulasi trading.
+              Akses akun CRYPTEX Anda dan mulai simulasi trading.
             </p>
             <ol className="list-decimal list-inside text-gray-300 mb-4 space-y-2">
               <li>

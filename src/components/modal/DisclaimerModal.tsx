@@ -46,7 +46,7 @@ const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ onAgree }) => {
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-300 space-y-3">
             <p>
-              KriptoLab adalah platform simulasi perdagangan cryptocurrency yang
+              CRYPTEX adalah platform simulasi perdagangan cryptocurrency yang
               dirancang hanya untuk tujuan edukasi.
             </p>
             <p>

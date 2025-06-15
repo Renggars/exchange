@@ -2,125 +2,237 @@
 "use client";
 
 import React, { useState } from "react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { api } from "@/utils/api";
+import { useRouter } from "next/navigation";
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import Image from "next/image";
 
-export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+const registerSchema = z
+  .object({
+    username: z.string().min(3, "Nama pengguna minimal 3 karakter."),
+    email: z.string().email("Format email tidak valid."),
+    password: z
+      .string()
+      .min(8, "Kata sandi minimal 8 karakter.")
+      .regex(
+        /[A-Z]/,
+        "Kata sandi harus mengandung setidaknya satu huruf kapital."
+      )
+      .regex(
+        /[a-z]/,
+        "Kata sandi harus mengandung setidaknya satu huruf kecil."
+      )
+      .regex(/[0-9]/, "Kata sandi harus mengandung setidaknya satu angka.")
+      .regex(
+        /[^a-zA-Z0-9]/,
+        "Kata sandi harus mengandung setidaknya satu karakter khusus."
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Konfirmasi kata sandi tidak cocok.",
+    path: ["confirmPassword"],
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Register submitted:", { name, email, password });
-    // TODO: Implement actual registration logic (e.g., tRPC mutation)
+type RegisterFormInputs = z.infer<typeof registerSchema>;
+
+export default function RegisterPage() {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError, // <-- setError sudah dideklarasikan di sini
+  } = useForm<RegisterFormInputs>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const registerMutation = api.auth.register.useMutation({
+    onSuccess: (data) => {
+      alert(data.message);
+      router.push("/auth/login");
+    },
+    onError: (err) => {
+      setSubmitError(null); // Reset submit error
+      // Cek apakah error dari server bisa dipetakan ke field tertentu
+      if (err.message.includes("Email sudah terdaftar")) {
+        // Pesan error spesifik dari backend
+        setError("email", {
+          type: "server",
+          message: "Email ini sudah terdaftar.",
+        });
+      } else {
+        // Untuk error lain yang tidak spesifik ke field
+        setSubmitError(err.message || "Terjadi kesalahan saat registrasi.");
+      }
+    },
+  });
+
+  const onSubmit = async (data: RegisterFormInputs) => {
+    setSubmitError(null); // Reset error sebelum submit baru
+    registerMutation.mutate({
+      email: data.email,
+      username: data.username,
+      password: data.password,
+    });
   };
 
   return (
     <main className="min-h-screen bg-gray-900 text-white flex flex-col">
-      <Header />
       <div className="flex-grow flex items-center justify-center">
         <AuthFormWrapper
-          title="Buat akun"
+          title="Daftar akun baru"
           footerText="Sudah punya akun?"
           footerLinkHref="/auth/login"
           footerLinkText="Masuk"
         >
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label
-                htmlFor="name"
-                className="block text-gray-300 text-sm font-semibold mb-1"
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-300"
               >
-                Nama
+                Nama Pengguna
               </label>
               <input
                 type="text"
-                id="name"
-                placeholder="Nama Anda"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:border-purple-500 text-white"
-                required
+                id="username"
+                {...register("username")}
+                className={`mt-1 block w-full rounded-md border-gray-700 bg-gray-700 py-2 px-3 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500 ${
+                  errors.username ? "border-red-500" : ""
+                }`}
+                placeholder="Masukkan nama pengguna Anda"
               />
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
+
             <div>
               <label
                 htmlFor="email"
-                className="block text-gray-300 text-sm font-semibold mb-1"
+                className="block text-sm font-medium text-gray-300"
               >
                 Email
               </label>
               <input
                 type="email"
                 id="email"
+                {...register("email")}
+                className={`mt-1 block w-full rounded-md border-gray-700 bg-gray-700 py-2 px-3 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500 ${
+                  errors.email ? "border-red-500" : ""
+                }`}
                 placeholder="email@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:border-purple-500 text-white"
-                required
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
+
             <div>
               <label
                 htmlFor="password"
-                className="block text-gray-300 text-sm font-semibold mb-1"
+                className="block text-sm font-medium text-gray-300"
               >
-                Password
+                Kata Sandi
               </label>
-              <div className="relative">
+              <div className="relative mt-1">
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
+                  {...register("password")}
+                  className={`block w-full rounded-md border-gray-700 bg-gray-700 py-2 px-3 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500 pr-10 ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                   placeholder="Masukkan kata sandi Anda"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:border-purple-500 text-white pr-10"
-                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-purple-400 hover:text-purple-300 focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-400 hover:text-white focus:outline-none"
                 >
-                  Tampilkan kata sandi
+                  {showPassword ? "Sembunyikan" : "Tampilkan"}
                 </button>
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-300"
+              >
+                Konfirmasi Kata Sandi
+              </label>
+              <div className="relative mt-1">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  {...register("confirmPassword")}
+                  className={`block w-full rounded-md border-gray-700 bg-gray-700 py-2 px-3 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500 pr-10 ${
+                    errors.confirmPassword ? "border-red-500" : ""
+                  }`}
+                  placeholder="Konfirmasi kata sandi Anda"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-400 hover:text-white focus:outline-none"
+                >
+                  {showConfirmPassword ? "Sembunyikan" : "Tampilkan"}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            {submitError && (
+              <p className="text-red-500 text-sm">{submitError}</p>
+            )}
 
             <button
               type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-md transition-colors"
+              disabled={isSubmitting || registerMutation.isPending}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Buat akun
+              {isSubmitting || registerMutation.isPending
+                ? "Mendaftar..."
+                : "Daftar"}
             </button>
-
-            <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-gray-700"></div>
-              <span className="flex-shrink mx-4 text-gray-500 text-sm">
-                Atau
-              </span>
-              <div className="flex-grow border-t border-gray-700"></div>
-            </div>
-
             <button
               type="button"
-              className="w-full flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-md transition-colors border border-gray-600"
+              className="w-full flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200"
             >
               <Image
-                src="/google-icon.svg"
+                src="/google.png"
                 alt="Google"
-                className="w-5 h-5 mr-2"
+                className="mr-2"
+                width={24}
+                height={24}
               />
               Lanjutkan dengan Google
             </button>
           </form>
         </AuthFormWrapper>
       </div>
-      <Footer />
     </main>
   );
 }

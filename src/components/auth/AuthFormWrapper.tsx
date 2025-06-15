@@ -17,7 +17,7 @@ export default function AuthFormWrapper({
   footerLinkText,
 }: AuthFormWrapperProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] px-4 py-8">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] w-full px-4 py-8">
       {" "}
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-white mb-6 text-center">

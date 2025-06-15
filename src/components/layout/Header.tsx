@@ -59,12 +59,11 @@ export default function Header() {
             className="flex items-center text-white text-2xl font-bold"
           >
             <Image
-              src="/kriptolab-logo.png"
-              alt="KriptoLab Logo"
-              width={32}
-              height={32}
+              src="/logo.png"
+              alt="CRYPTEX Logo"
+              width={160}
+              height={100}
             />
-            KriptoLab
           </Link>
           <nav className="hidden md:flex space-x-6">
             <Link
@@ -114,24 +113,24 @@ export default function Header() {
         </div>
 
         {/* Tombol Aksi Kanan (Login/Register atau Profil/Saldo) */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-8">
           {isLoggedIn ? (
             <>
               {/* Bahasa (ID) */}
-              <div className="flex items-center space-x-1 text-gray-300">
+              <div className="flex items-center space-x-1 text-white">
                 <Image
                   src="/id-flag.png"
                   alt="ID Flag"
-                  width={16}
-                  height={16}
+                  width={35}
+                  height={35}
                 />
-                <span>ID</span>
+                <span className="text-xl">ID</span>
               </div>
               {/* Saldo */}
               <div className="flex items-center space-x-1 text-gray-300">
                 {/* Icon Dompet */}
                 <svg
-                  className="w-5 h-5"
+                  className="w-6 h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -149,13 +148,15 @@ export default function Header() {
               {/* Profil Dropdown */}
               <div className="relative" ref={profileMenuRef}>
                 <button
+                  className="flex items-center cursor-pointer"
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                  className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold cursor-pointer transition-colors hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
-                  {user.initial}
+                  <div className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold cursor-pointer transition-colors hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                    {user.initial}
+                  </div>
                   {/* Dropdown Arrow Icon */}
                   <svg
-                    className={`ml-1 w-4 h-4 transform transition-transform ${
+                    className={`ml-1 w-6 h-6 transform transition-transform ${
                       isProfileMenuOpen ? "rotate-180" : "rotate-0"
                     }`}
                     fill="none"
